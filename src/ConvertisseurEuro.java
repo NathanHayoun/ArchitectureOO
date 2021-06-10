@@ -1,81 +1,86 @@
 import java.util.Scanner;
 
+import properties.ShowPropertiesStrategy;
+
 public class ConvertisseurEuro {
-    private double montant;
+	private double montant;
+	private ShowPropertiesStrategy sps;
 
-    public ConvertisseurEuro() {
-    }
+	public ConvertisseurEuro(ShowPropertiesStrategy sps) {
+		this.sps = sps;
+	}
 
-    public String convertir() {
-        getMontant("Entrer un montant");
-        Monnaie monnaie = getQuelDevise();
-        return String.valueOf(monnaie.conversion(montant)) + monnaie.sigle;
-    }
+	public String convertir() {
+		getMontant(sps.readProperties("PROMPT_MONTANT", "Amount"));
 
-    private void getMontant(String s) {
-        Scanner sc;
-        boolean bon = false;
+		Monnaie monnaie = getQuelDevise();
+		return String.valueOf(monnaie.conversion(montant)) + monnaie.sigle;
+	}
 
-        while (true) {
-            System.out.println(s);
+	private void getMontant(String s) {
+		Scanner sc;
+		boolean bon = false;
 
-            try {
-                sc = new Scanner(System.in);
-                double nb = sc.nextDouble();
-                sc.nextLine();
-                this.montant = nb;
-                break;
-            } catch (Exception e) {
-                System.err.println("Montant invalide");
-            }
-        }
-    }
+		while (true) {
+			System.out.println(s);
 
-    private Monnaie getQuelDevise() {
-        char signe = '*';
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            boolean bon;
-            System.out.println("Choisir une devise ¥ ou $");
-            try {
-                signe = sc.nextLine().charAt(0);
-                bon = signe == '$' || signe == '¥';
+			try {
+				sc = new Scanner(System.in);
+				double nb = sc.nextDouble();
+				sc.nextLine();
+				this.montant = nb;
+				break;
+			} catch (Exception e) {
+				System.err.println(sps.readProperties("PROMPT_BAD_MONTANT", "Incorrect Value"));
+			}
+		}
+	}
 
-                if (!bon) {
-                    System.err.println("Devise invalide");
-                } else {
-                    if (signe == '$') {
-                        return new Dollar();
-                    } else {
-                        return new Yen();
-                    }
-                }
-            } catch (Exception e) {
-                System.err.println("Ceci n'est pas un nombre");
-            }
-        }
-    }
+	private Monnaie getQuelDevise() {
+		char signe = '*';
+		Scanner sc = new Scanner(System.in);
+		while (true) {
+			boolean bon;
+			System.out.println(sps.readProperties("PROMT_CURRENCY", "� or $"));
+			try {
+				signe = sc.nextLine().charAt(0);
+				bon = signe == '$' || signe == '�';
 
-    public boolean getArret() {
-        Scanner sc = new Scanner(System.in);
-        char arret = '*';
+				if (!bon) {
+					System.err.println(sps.readProperties("PROMPT_BAD_CURRENCY", "Incorrect currency"));
+				} else {
+					if (signe == '$') {
+						return new Dollar();
+					} else {
+						return new Yen();
+					}
+				}
+			} catch (Exception e) {
+				System.err.println(sps.readProperties("IS_NOT_NUMBER", "Is not a number"));
+			}
+		}
+	}
 
-        while (true) {
-            System.out.println("Saisir 0 pour arreter ou 1 pour continuer");
+	public boolean getArret() {
+		Scanner sc = new Scanner(System.in);
+		char arret = '*';
 
-            try {
-                arret = sc.nextLine().charAt(0);
-            } catch (Exception e) {
-                System.err.println("Mauvais caractère saisi");
-            }
+		while (true) {
+			System.out.println(sps.readProperties("PROMPT_CONTINUE", "Type 0 or 1"));
 
-            if (arret == '0') {
-                return false;
-            } else if (arret == '1') {
-                return true;
-            } else {
-                System.err.println("Mauvais caractère saisi");
-            }
-        }
-    }
+			try {
+				arret = sc.nextLine().charAt(0);
+			} catch (Exception e) {
+				System.err.println(sps.readProperties("BAD_CHARACTERE", "Not 1 or 0"));
+			}
+
+			if (arret == '0') {
+				return false;
+			} else if (arret == '1') {
+				return true;
+			} else {
+				System.err.println(sps.readProperties("BAD_CHARACTERE", "Not 1 or 0"));
+			}
+		}
+	}
 }
