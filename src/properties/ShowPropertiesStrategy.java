@@ -16,10 +16,7 @@ public class ShowPropertiesStrategy {
 			for (Entry<Object, Object> prop : properties.entrySet()) {
 				System.out.println("Key :" + prop.getKey() + " Value :" + prop.getValue());
 			}
-		} else {
-			System.err.println("Vous devez d'abord instantier un objet de type iReadProperties");
 		}
-
 	}
 
 	private void loadProperties() {
@@ -30,10 +27,7 @@ public class ShowPropertiesStrategy {
 		if (iReadProperties != null) {
 
 			return this.properties.get(key) == null ? defaultMessage : this.properties.getProperty(key);
-		} else {
-			System.err.println("Vous devez d'abord instantier un objet de type iReadProperties");
 		}
-
 		return null;
 	}
 
