@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import application.Dollar;
@@ -13,11 +14,14 @@ class MoneyTest {
 	private Money dol;
 	private Money yen;
 
-	@Test
-	void testConversion() {
+	@BeforeEach
+	void initialisation() {
 		dol = new Dollar();
 		yen = new Yen();
+	}
 
+	@Test
+	void testConversion() {
 		// convertir 15 euros en dollars
 		assertEquals(dol.conversion(15), 17.7);
 
@@ -49,11 +53,9 @@ class MoneyTest {
 	@Test
 	void testGetRate() {
 		// obtenir taux du dollar
-		dol = new Dollar();
 		assertEquals(dol.getRate(), 1.18);
 
 		// obtenir taux du yen
-		yen = new Yen();
 		assertEquals(yen.getRate(), 129.25);
 
 	}
@@ -61,12 +63,10 @@ class MoneyTest {
 	@Test
 	void testSetRate() {
 		// test de changement du taux du dollar
-		dol = new Dollar();
 		dol.setRate(5);
 		assertEquals(dol.getRate(), 5);
 
 		// test de changement du taux du yen
-		yen = new Yen();
 		yen.setRate(3.5);
 		assertEquals(yen.getRate(), 3.5);
 
@@ -75,11 +75,9 @@ class MoneyTest {
 	@Test
 	void testGetAccronym() {
 		// obtenir symbole du dollar
-		dol = new Dollar();
 		assertEquals(dol.getAcronym(), '$');
 
 		// obtenir symbole du yen
-		yen = new Yen();
 		assertEquals(yen.getAcronym(), '¥');
 
 	}
@@ -87,12 +85,10 @@ class MoneyTest {
 	@Test
 	void testSetAccronym() {
 		// test de changement du symbole du dollar
-		dol = new Dollar();
 		dol.setAcronym('a');
 		assertEquals(dol.getAcronym(), 'a');
 
 		// test de changement du symbole du yen
-		yen = new Yen();
 		yen.setAcronym('b');
 		assertEquals(yen.getAcronym(), 'b');
 
