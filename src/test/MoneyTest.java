@@ -11,8 +11,8 @@ import application.Yen;
 
 class MoneyTest {
 
-	private Money dol;
-	private Money yen;
+	private static Money dol;
+	private static Money yen;
 
 	@BeforeEach
 	void initialisation() {
