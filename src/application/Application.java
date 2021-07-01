@@ -4,32 +4,43 @@ import Configuration.Configuration;
 import properties.IReadProperties;
 import properties.ReadFileProperties;
 import properties.ShowPropertiesStrategy;
+import sockets.BaseSockets;
 import sockets.Client;
 import sockets.Server;
 
 public class Application {
 	public void start() {
 		IReadProperties iReadProperties = new ReadFileProperties(Configuration.getPathLanguage());
-		ShowPropertiesStrategy sps = new ShowPropertiesStrategy().setPropertiesStrategy(iReadProperties);
+		ShowPropertiesStrategy sps = ShowPropertiesStrategy.getInstance().setPropertiesStrategy(iReadProperties);
 
-		Thread server = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				Server server = new Server();
-				server.start();
-			}
-		});
+		Thread server = initServer(sps);
 		server.start();
 
+		Thread client = initClient(sps);
+		client.start();
+	}
+
+	public Thread initClient(ShowPropertiesStrategy sps) {
 		Thread client = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				Client client = new Client(sps);
+				BaseSockets client = new Client(sps);
 				client.start();
 			}
 		});
-		client.start();
+		return client;
+	}
+
+	public Thread initServer(ShowPropertiesStrategy sps) {
+		Thread server = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				BaseSockets server = new Server(sps);
+				server.start();
+			}
+		});
+		return server;
 	}
 }

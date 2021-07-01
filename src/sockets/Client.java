@@ -8,14 +8,13 @@ import java.util.Scanner;
 
 import properties.ShowPropertiesStrategy;
 
-public class Client {
-	ShowPropertiesStrategy sps;
-	private boolean running = true;
+public class Client extends BaseSockets {
 
 	public Client(ShowPropertiesStrategy sps) {
-		this.sps = sps;
+		super(sps);
 	}
 
+	@Override
 	public void start() {
 
 		final Socket clientSocket;
@@ -32,8 +31,7 @@ public class Client {
 				public void run() {
 					while (running) {
 						try {
-							Enveloppe amount = new Enveloppe(
-									getAmount(sps.readProperties("PROMPT_MONTANT", "Amount")));
+							Enveloppe amount = new Enveloppe(getAmount(sps.readProperties("PROMPT_MONTANT", "Amount")));
 							ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
 							oos.writeObject(amount);
 
@@ -76,7 +74,12 @@ public class Client {
 				sc = new Scanner(System.in);
 				double amountEnterByUser = sc.nextDouble();
 				sc.nextLine();
-				return String.valueOf(amountEnterByUser);
+
+				if (amountEnterByUser > 0) {
+					return String.valueOf(amountEnterByUser);
+				} else {
+					System.err.println(sps.readProperties("NEGATIVE_NUMBER", "Negative number"));
+				}
 			} catch (Exception e) {
 				System.err.println(sps.readProperties("PROMPT_BAD_MONTANT", "Incorrect Value"));
 			}

@@ -9,14 +9,17 @@ import java.net.Socket;
 import application.Dollar;
 import application.Money;
 import application.Yen;
+import exception.NegativeNumberException;
+import properties.ShowPropertiesStrategy;
 
-public class Server {
+public class Server extends BaseSockets {
 	private double amount;
-	private boolean running = true;
 
-	public Server() {
+	public Server(ShowPropertiesStrategy sps) {
+		super(sps);
 	}
 
+	@Override
 	public void start() {
 
 		final ServerSocket serveurSocket;
@@ -36,6 +39,7 @@ public class Server {
 						try {
 							ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
 							Enveloppe envelop = (Enveloppe) ois.readObject();
+
 							try {
 								double amountTypeByUser = Double.valueOf(envelop.getMessage());
 								amount = amountTypeByUser;
@@ -45,26 +49,34 @@ public class Server {
 								ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
 								oos.writeObject(envelop);
 							} catch (Exception e) {
-								System.out.println(e);
+								System.err.println(e);
 								break;
 							}
-
 							ois = new ObjectInputStream(clientSocket.getInputStream());
 							envelop = (Enveloppe) ois.readObject();
-
 							Money money = null;
+
 							switch (envelop.getMessage().charAt(0)) {
 							case '$':
-								money = new Dollar();
+								money = new Dollar(sps);
 								break;
 							case '¥':
-								money = new Yen();
+								money = new Yen(sps);
 								break;
 							}
-							String stringReturn = String.valueOf(money.conversion(amount)) + money.getAcronym();
+							String stringReturn = "";
+							EnveloppeStatusReturn status = EnveloppeStatusReturn.ok;
+
+							try {
+								stringReturn = String.valueOf(money.conversion(amount)) + money.getAcronym();
+							} catch (NegativeNumberException e) {
+								System.err.print(sps.readProperties("NEGATIVE_NUMBER", "Negative number") + e);
+								status = EnveloppeStatusReturn.erreur;
+							}
 							envelop.setDateResponse(System.currentTimeMillis())
 									.setReferenceServeur(serveurSocket.getLocalSocketAddress().toString())
-									.setResponse(stringReturn);
+									.setResponse(stringReturn).setStatus(status);
+							;
 							ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
 							oos.writeObject(envelop);
 

@@ -11,6 +11,7 @@ public class Enveloppe implements Serializable {
 	private long dateResponse;
 	private String referenceClient;
 	private String referenceServer;
+	private EnveloppeStatusReturn status;
 
 	public Enveloppe(String message) {
 		this.message = message;
@@ -75,6 +76,30 @@ public class Enveloppe implements Serializable {
 		this.referenceServer = referenceServeur;
 
 		return this;
+	}
+
+	public long getDateRequests() {
+		return dateRequests;
+	}
+
+	public void setDateRequests(long dateRequests) {
+		this.dateRequests = dateRequests;
+	}
+
+	public String getReferenceServer() {
+		return referenceServer;
+	}
+
+	public void setReferenceServer(String referenceServer) {
+		this.referenceServer = referenceServer;
+	}
+
+	public EnveloppeStatusReturn getStatus() {
+		return status;
+	}
+
+	public void setStatus(EnveloppeStatusReturn status) {
+		this.status = status;
 	}
 
 	@Override
