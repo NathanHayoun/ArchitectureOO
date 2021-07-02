@@ -10,6 +10,15 @@ import properties.ShowPropertiesStrategy;
 
 public class Client extends BaseSockets {
 
+	private static final String PROMPT_MONTANT = "PROMPT_MONTANT";
+	private static final String BAD_CHARACTERE = "BAD_CHARACTERE";
+	private static final String PROMPT_CONTINUE = "PROMPT_CONTINUE";
+	private static final String IS_NOT_NUMBER = "IS_NOT_NUMBER";
+	private static final String PROMPT_BAD_CURRENCY = "PROMPT_BAD_CURRENCY";
+	private static final String PROMT_CURRENCY = "PROMT_CURRENCY";
+	private static final String PROMPT_BAD_MONTANT = "PROMPT_BAD_MONTANT";
+	private static final String NEGATIVE_NUMBER = "NEGATIVE_NUMBER";
+
 	public Client(ShowPropertiesStrategy sps) {
 		super(sps);
 	}
@@ -31,7 +40,7 @@ public class Client extends BaseSockets {
 				public void run() {
 					while (running) {
 						try {
-							Enveloppe amount = new Enveloppe(getAmount(sps.readProperties("PROMPT_MONTANT", "Amount")));
+							Enveloppe amount = new Enveloppe(getAmount(sps.readProperties(PROMPT_MONTANT, "Amount")));
 							ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
 							oos.writeObject(amount);
 
@@ -44,8 +53,12 @@ public class Client extends BaseSockets {
 
 							ois = new ObjectInputStream(clientSocket.getInputStream());
 							envelop = (Enveloppe) ois.readObject();
-							System.out.println(envelop.getResponse());
 
+							if (envelop.getStatus() == EnveloppeStatusReturn.erreur) {
+								System.out.println(sps.readProperties(NEGATIVE_NUMBER, "Negative number"));
+							} else {
+								System.out.println(envelop.getResponse());
+							}
 							oos = new ObjectOutputStream(clientSocket.getOutputStream());
 							Enveloppe stop = new Enveloppe(getStop());
 							oos.writeObject(stop);
@@ -78,10 +91,10 @@ public class Client extends BaseSockets {
 				if (amountEnterByUser > 0) {
 					return String.valueOf(amountEnterByUser);
 				} else {
-					System.err.println(sps.readProperties("NEGATIVE_NUMBER", "Negative number"));
+					System.err.println(sps.readProperties(NEGATIVE_NUMBER, "Negative number"));
 				}
 			} catch (Exception e) {
-				System.err.println(sps.readProperties("PROMPT_BAD_MONTANT", "Incorrect Value"));
+				System.err.println(sps.readProperties(PROMPT_BAD_MONTANT, "Incorrect Value"));
 			}
 		}
 	}
@@ -92,14 +105,14 @@ public class Client extends BaseSockets {
 
 		while (true) {
 			boolean goodCurrency;
-			System.out.println(sps.readProperties("PROMT_CURRENCY", "¥ or $"));
+			System.out.println(sps.readProperties(PROMT_CURRENCY, "¥ or $"));
 
 			try {
 				currencyTypeByUser = sc.nextLine().charAt(0);
 				goodCurrency = currencyTypeByUser == '$' || currencyTypeByUser == '¥';
 
 				if (!goodCurrency) {
-					System.err.println(sps.readProperties("PROMPT_BAD_CURRENCY", "Incorrect currency"));
+					System.err.println(sps.readProperties(PROMPT_BAD_CURRENCY, "Incorrect currency"));
 				} else {
 					if (currencyTypeByUser == '$') {
 
@@ -110,7 +123,7 @@ public class Client extends BaseSockets {
 					}
 				}
 			} catch (Exception e) {
-				System.err.println(sps.readProperties("IS_NOT_NUMBER", "Is not a number"));
+				System.err.println(sps.readProperties(IS_NOT_NUMBER, "Is not a number"));
 			}
 		}
 	}
@@ -120,12 +133,12 @@ public class Client extends BaseSockets {
 		char stopTypeByUser = '*';
 
 		while (true) {
-			System.out.println(sps.readProperties("PROMPT_CONTINUE", "Type 0 or 1"));
+			System.out.println(sps.readProperties(PROMPT_CONTINUE, "Type 0 or 1"));
 
 			try {
 				stopTypeByUser = sc.nextLine().charAt(0);
 			} catch (Exception e) {
-				System.err.println(sps.readProperties("BAD_CHARACTERE", "Not 1 or 0"));
+				System.err.println(sps.readProperties(BAD_CHARACTERE, "Not 1 or 0"));
 			}
 
 			if (stopTypeByUser == '0') {
@@ -135,7 +148,7 @@ public class Client extends BaseSockets {
 
 				return "true";
 			} else {
-				System.err.println(sps.readProperties("BAD_CHARACTERE", "Not 1 or 0"));
+				System.err.println(sps.readProperties(BAD_CHARACTERE, "Not 1 or 0"));
 			}
 		}
 	}

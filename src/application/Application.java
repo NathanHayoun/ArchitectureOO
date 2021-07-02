@@ -1,6 +1,6 @@
 package application;
 
-import Configuration.Configuration;
+import configuration.Configuration;
 import properties.IReadProperties;
 import properties.ReadFileProperties;
 import properties.ShowPropertiesStrategy;

@@ -1,9 +1,8 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,71 +10,62 @@ import application.Dollar;
 import application.Money;
 import application.Yen;
 import exception.NegativeNumberException;
-import properties.ReadFileProperties;
-import properties.ShowPropertiesStrategy;
 
 class MoneyTest {
 
 	private static Money dol;
 	private static Money yen;
-	private static ShowPropertiesStrategy sps;
-
-	@BeforeAll
-	static void initSps() {
-		ReadFileProperties rfp = new ReadFileProperties(System.getenv("path_to_file"));
-		sps = ShowPropertiesStrategy.getInstance().setPropertiesStrategy(rfp);
-	}
 
 	@BeforeEach
 	void initialisation() {
-		dol = new Dollar(sps);
-		yen = new Yen(sps);
+		dol = new Dollar();
+		yen = new Yen();
 	}
 
 	@Test
 	void testConversion() throws NegativeNumberException {
 		// convertir 15 euros en dollars
-		assertEquals(dol.conversion(15), 17.7);
+		assertEquals(dol.conversion(15), 17.7, 0.01);
 
 		// convertir 12.65 euros en dollars
-		assertEquals(dol.conversion(12.65), 14.93);
+		assertEquals(dol.conversion(12.65), 14.93, 0.01);
 
 		// convertir -0.9 euros en dollars
 		try {
-			assertEquals(dol.conversion(-0.9), -1.06);
+			assertEquals(dol.conversion(-0.9), -1.06, 0.01);
 			fail();
 		} catch (NegativeNumberException e) {
 
 		}
 
 		// convertir 0 euros en dollars
-		assertEquals(dol.conversion(0), 0);
+		assertEquals(dol.conversion(0), 0, 0.01);
 
 		// convertir 10 euros en yen
-		assertEquals(yen.conversion(10), 1292.5);
+		assertEquals(yen.conversion(10), 1292.5, 0.01);
 
 		// convertir 28.32 euros en yen
-		assertEquals(yen.conversion(28.32), 3660.36);
+		assertEquals(yen.conversion(28.32), 3660.36, 0.01);
 
 		// convertir -0.87 euros en yen
 		try {
-			assertEquals(yen.conversion(-0.87), -112.45);
+			assertEquals(yen.conversion(-0.87), -112.45, 0.01);
 			fail();
 		} catch (NegativeNumberException e) {
 
 		}
 
 		// convertir 0 euros en yen
-		assertEquals(yen.conversion(0), 0);
+		assertEquals(yen.conversion(0), 0, 0.01);
 	}
 
 	@Test
 	void testGetRate() {
 		// obtenir taux du dollar
-		assertEquals(dol.getRate(), 1.18);
+		assertEquals(dol.getRate(), 1.18, 0.01);
 
 		// obtenir taux du yen
-		assertEquals(yen.getRate(), 129.25);
+		assertEquals(yen.getRate(), 129.25, 0.01);
 
 	}
 
@@ -83,11 +73,11 @@ class MoneyTest {
 	void testSetRate() {
 		// test de changement du taux du dollar
 		dol.setRate(5);
-		assertEquals(dol.getRate(), 5);
+		assertEquals(dol.getRate(), 5, 0.01);
 
 		// test de changement du taux du yen
 		yen.setRate(3.5);
-		assertEquals(yen.getRate(), 3.5);
+		assertEquals(yen.getRate(), 3.5, 0.01);
 
 	}
 

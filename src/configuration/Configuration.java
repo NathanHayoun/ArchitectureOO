@@ -1,4 +1,4 @@
-package Configuration;
+package configuration;
 
 import java.nio.file.Path;
 import java.util.HashMap;

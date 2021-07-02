@@ -58,10 +58,10 @@ public class Server extends BaseSockets {
 
 							switch (envelop.getMessage().charAt(0)) {
 							case '$':
-								money = new Dollar(sps);
+								money = new Dollar();
 								break;
 							case '¥':
-								money = new Yen(sps);
+								money = new Yen();
 								break;
 							}
 							String stringReturn = "";
