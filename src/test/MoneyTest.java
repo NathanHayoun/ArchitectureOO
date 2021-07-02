@@ -6,10 +6,10 @@ import static org.junit.Assert.fail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import application.Dollar;
-import application.Money;
-import application.Yen;
 import exception.NegativeNumberException;
+import model.Dollar;
+import model.Money;
+import model.Yen;
 
 class MoneyTest {
 

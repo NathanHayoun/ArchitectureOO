@@ -6,10 +6,10 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import application.Dollar;
-import application.Money;
-import application.Yen;
 import exception.NegativeNumberException;
+import model.Dollar;
+import model.Money;
+import model.Yen;
 import properties.ShowPropertiesStrategy;
 
 public class Server extends BaseSockets {

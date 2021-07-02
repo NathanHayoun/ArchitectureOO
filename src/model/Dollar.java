@@ -1,4 +1,4 @@
-package application;
+package model;
 
 public class Dollar extends Money {
 	public final double RATE = 1.18;

@@ -1,4 +1,4 @@
-package application;
+package model;
 
 public class Yen extends Money {
 	public final double TAUX = 129.25;

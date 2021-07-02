@@ -123,7 +123,7 @@ public class Client extends BaseSockets {
 					}
 				}
 			} catch (Exception e) {
-				System.err.println(sps.readProperties(IS_NOT_NUMBER, "Is not a number"));
+				System.err.println(sps.readProperties(PROMPT_BAD_CURRENCY, "Incorrect currency"));
 			}
 		}
 	}
